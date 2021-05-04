@@ -9,17 +9,21 @@ let xScale = 1,
   startYear,
   endYear,
   rangeOfYears,
-  dataset;
+  dataset,
+  rectWidth,
+  baseTemperature;
 
 async function getData() {
   const resp = await axios.get(
     'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/global-temperature.json'
   );
   dataset = resp.data;
+  baseTemperature = dataset.baseTemperature;
   console.log(dataset);
   startYear = d3.min(dataset.monthlyVariance, d => d.year);
   endYear = d3.max(dataset.monthlyVariance, d => d.year);
   rangeOfYears = endYear - startYear;
+  rectWidth = w / rangeOfYears;
 
   loadPage();
 }
@@ -43,12 +47,24 @@ function loadPage() {
     .attr('class', 'cell')
     .attr('x', 100)
     .attr('y', (d, i) => {
-      console.log(d, i);
+      //   console.log(d, i);
+      //TODO
+      //put this in right spot based on d.Month-1 in regards to height
       return 100 + i * (size + 5);
     })
-    .attr('width', size)
+    .attr('width', rectWidth)
     .attr('height', rectHeight)
-    .style('fill', 'red');
+    .style('fill', 'red')
+    .attr('data-month', (d, i) => {
+      return d.month - 1;
+    })
+    .attr('data-year', (d, i) => {
+      return d.year;
+    })
+    .attr('data-temp', (d, i) => {
+      //   console.log(d.temp);
+      return d.variance + baseTemperature;
+    });
   // .style('fill', d => color(d));
 
   const xAxisScale = d3
