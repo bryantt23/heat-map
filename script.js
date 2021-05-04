@@ -34,14 +34,14 @@ async function getData() {
     'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/global-temperature.json'
   );
   dataset = resp.data;
-  console.log(dataset);
-  dataset.monthlyVariance = [
-    ...dataset.monthlyVariance.slice(0, 20),
-    ...dataset.monthlyVariance.slice(3100)
-  ];
-  console.log(dataset);
+  // console.log(dataset);
+  // dataset.monthlyVariance = [
+  //   ...dataset.monthlyVariance.slice(0, 20),
+  //   ...dataset.monthlyVariance.slice(3100)
+  // ];
+  // console.log(dataset);
   baseTemperature = dataset.baseTemperature;
-  console.log(dataset);
+  // console.log(dataset);
   startYear = d3.min(dataset.monthlyVariance, d => d.year);
   endYear = d3.max(dataset.monthlyVariance, d => d.year);
   rangeOfYears = endYear - startYear;
@@ -53,7 +53,18 @@ async function getData() {
   loadPage();
 }
 function loadPage() {
-  console.log('loadpg');
+  console.log('load pg');
+
+  d3.select('body')
+    .append('div')
+    .attr('id', 'tooltip')
+    .attr('style', 'position:absolute; visibility:visible')
+    .attr('width', w)
+    .attr('height', h)
+    .on('mousemove', () => {
+      d3.select('#tooltip');
+    });
+
   const svg = d3
     .select('body')
     .append('svg')
@@ -95,6 +106,12 @@ function loadPage() {
     .call(yAxis);
 
   svg
+    .append('div')
+    .attr('id', 'tooltip')
+    .attr('style', 'position: absolute; visibility: hidden')
+    .attr('width', w);
+
+  svg
     .selectAll('rect')
     .data(dataset.monthlyVariance)
     .enter()
@@ -117,7 +134,7 @@ function loadPage() {
       // console.log(h - (d.Month - 1) * yScale);
       //TODO
       //put this in right spot based on d.Month-1 in regards to height
-      return h - (d.month - 1) * yScale;
+      return (d.month - 1) * yScale;
     })
     .attr('data-month', (d, i) => {
       return d.month - 1;
@@ -130,8 +147,8 @@ function loadPage() {
       return d.variance + baseTemperature;
     })
     .style('fill', (d, i) => {
-      console.log(d, i);
-      console.log(colors(i % 11));
+      // console.log(d, i);
+      // console.log(colors(i % 11));
       return colors(i % 11);
     });
 }
