@@ -3,6 +3,22 @@ const w = 1000,
   padding = 60,
   rectHeight = h / 12;
 const size = 20;
+const colors = d3
+  .scaleQuantize()
+  .domain([0, 10])
+  .range([
+    '#5E4FA2',
+    '#3288BD',
+    '#66C2A5',
+    '#ABDDA4',
+    '#E6F598',
+    '#FFFFBF',
+    '#FEE08B',
+    '#FDAE61',
+    '#F46D43',
+    '#D53E4F',
+    '#9E0142'
+  ]);
 
 let xScale = 1,
   yScale = 1,
@@ -20,8 +36,8 @@ async function getData() {
   dataset = resp.data;
   console.log(dataset);
   dataset.monthlyVariance = [
-    ...dataset.monthlyVariance.slice(0, 10),
-    ...dataset.monthlyVariance.slice(3000)
+    ...dataset.monthlyVariance.slice(0, 20),
+    ...dataset.monthlyVariance.slice(3100)
   ];
   console.log(dataset);
   baseTemperature = dataset.baseTemperature;
@@ -32,6 +48,7 @@ async function getData() {
 
   rectWidth = w / rangeOfYears;
   xScale = w / rangeOfYears;
+  yScale = h / 12;
 
   loadPage();
 }
@@ -89,17 +106,19 @@ function loadPage() {
       //   console.log('hi');
       //   console.log(d.year - startYear);
       const num = (d.year - startYear) * xScale;
-      console.log(num);
+      // console.log(num);
       return num;
     })
     // .attr('x', 100)
     .attr('y', (d, i) => {
-      console.log(d, i);
+      // console.log(h - (d.month - 1) * yScale);
+      // console.log(h - (d.Month - 1) * yScale);
+      // console.log(h - (d.Month - 1) * yScale);
+      // console.log(h - (d.Month - 1) * yScale);
       //TODO
       //put this in right spot based on d.Month-1 in regards to height
-      return h - (d.Month - 1) * yScale;
+      return h - (d.month - 1) * yScale;
     })
-    .style('fill', 'blue')
     .attr('data-month', (d, i) => {
       return d.month - 1;
     })
@@ -109,8 +128,12 @@ function loadPage() {
     .attr('data-temp', (d, i) => {
       //   console.log(d.temp);
       return d.variance + baseTemperature;
+    })
+    .style('fill', (d, i) => {
+      console.log(d, i);
+      console.log(colors(i % 11));
+      return colors(i % 11);
     });
-  // .style('fill', d => color(d));
 }
 
 getData();
