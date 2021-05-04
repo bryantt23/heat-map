@@ -31,6 +31,18 @@ function loadPage() {
 
   //TODO passes test but doesn't show text
   svg.append('div').attr('id', 'description').text('hiiii');
+
+  const xAxisScale = d3
+    .scaleTime()
+    .domain([new Date(startYear + ''), new Date(endYear + '')])
+    .range([0, w]);
+
+  const xAxis = d3.axisTop().scale(xAxisScale);
+  svg
+    .append('g')
+    .attr('id', 'x-axis')
+    .attr('transform', `translate(0, ${h})`)
+    .call(xAxis);
 }
 
 getData();
