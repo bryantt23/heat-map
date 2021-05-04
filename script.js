@@ -28,6 +28,9 @@ function loadPage() {
     .attr('width', w)
     .attr('height', h)
     .attr('id', 'title');
+
+  //TODO passes test but doesn't show text
+  svg.append('div').attr('id', 'description').text('hiiii');
 }
 
 getData();
