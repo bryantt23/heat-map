@@ -1,6 +1,8 @@
 const w = 500,
   h = 500,
-  padding = 60;
+  padding = 60,
+  rectHeight = h / 12;
+const size = 20;
 
 let xScale = 1,
   yScale = 1,
@@ -22,6 +24,7 @@ async function getData() {
   loadPage();
 }
 function loadPage() {
+  console.log('loadpg');
   const svg = d3
     .select('body')
     .append('svg')
@@ -31,6 +34,22 @@ function loadPage() {
 
   //TODO passes test but doesn't show text
   svg.append('div').attr('id', 'description').text('hiiii');
+
+  svg
+    .selectAll('rect')
+    .data(dataset.monthlyVariance)
+    .enter()
+    .append('rect')
+    .attr('class', 'cell')
+    .attr('x', 100)
+    .attr('y', (d, i) => {
+      console.log(d, i);
+      return 100 + i * (size + 5);
+    })
+    .attr('width', size)
+    .attr('height', rectHeight)
+    .style('fill', 'red');
+  // .style('fill', d => color(d));
 
   const xAxisScale = d3
     .scaleTime()
