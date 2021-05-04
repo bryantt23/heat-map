@@ -4,16 +4,9 @@ let w = 500,
   h = 500,
   xScale = 1,
   yScale = 1,
-  startDate = 10000,
-  endDate = 0,
-  startTime = new Date(),
-  endTime = new Date(null),
-  rangeOfYears,
-  rangeOfTime;
-
-const timeFormat = d3.timeFormat('%M:%S');
-const keys = ['No doping allegations', 'Riders with doping allegations'];
-const size = 20;
+  startYear,
+  endYear,
+  rangeOfYears;
 
 async function getData() {
   const resp = await axios.get(
@@ -21,6 +14,9 @@ async function getData() {
   );
   dataset = resp.data;
   console.log(dataset);
+  startYear = d3.min(dataset.monthlyVariance, d => d.year);
+  endYear = d3.max(dataset.monthlyVariance, d => d.year);
+  rangeOfYears = endYear - startYear;
 }
 
 getData();
