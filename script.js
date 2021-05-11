@@ -53,18 +53,18 @@ async function getData() {
   loadPage();
 }
 function loadPage() {
-  console.log('load pg');
-
   d3.select('body')
     .append('div')
     .attr('id', 'tooltip')
-    .attr('style', 'position:absolute; visibility:visible')
+    .attr('style', 'position:absolute; visibility:hidden')
     .attr('width', w)
     .attr('height', h)
+    .attr('background-color', 'white')
     .on('mousemove', () => {
       d3.select('#tooltip');
     });
 
+  console.log('load pg');
   const svg = d3
     .select('body')
     .append('svg')
@@ -105,11 +105,11 @@ function loadPage() {
     .attr('transform', `translate(0, 0)`)
     .call(yAxis);
 
-  svg
-    .append('div')
-    .attr('id', 'tooltip')
-    .attr('style', 'position: absolute; visibility: hidden')
-    .attr('width', w);
+  // svg
+  //   .append('div')
+  //   .attr('id', 'tooltip')
+  //   .attr('style', 'position: absolute; visibility: hidden')
+  //   .attr('width', w);
 
   svg
     .selectAll('rect')
@@ -119,6 +119,7 @@ function loadPage() {
     .attr('class', 'cell')
     .attr('width', rectWidth)
     .attr('height', rectHeight)
+    .attr('style', 'opacity: 0.5')
     .attr('x', d => {
       //   console.log('hi');
       //   console.log(d.year - startYear);
@@ -150,6 +151,31 @@ function loadPage() {
       // console.log(d, i);
       // console.log(colors(i % 11));
       return colors(i % 11);
+    })
+    .on('mouseover', (i, d) => {
+      //TODO get it to create a border around the current rect but only if it's quick
+      // console.log('mouse');
+      const x = i.clientX,
+        y = i.clientY;
+
+      console.log(d, i);
+      console.log(x, y);
+      // console.log(this);
+      // console.log(d);
+
+      d3.select('#tooltip')
+        .style('top', y + 'px')
+        .style('left', x + 'px')
+        .style('visibility', 'visible')
+        .style('background-color', 'white')
+        .attr('data-year', d.year)
+        // .attr('y', 100)
+        .html(`<p>${d.year}</p>`);
+    })
+    .on('mouseout', () => {
+      d3.select('#tooltip')
+        .style('visibility', 'hidden')
+        .attr('data-date', null);
     });
 }
 
